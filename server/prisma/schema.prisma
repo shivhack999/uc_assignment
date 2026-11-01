@@ -1,0 +1,165 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model employee {
+  id        String   @id @default(uuid())
+  name      String   @db.VarChar(100)
+  email     String   @unique @db.VarChar(255)
+  password  String   @db.VarChar(255)
+  role      role     @default(EMPLOYEE)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now()) @db.DateTime(0)
+  updatedAt DateTime @updatedAt @db.DateTime(0)
+
+  // One employee can upload multiple media files
+  mediaUploads media[] @relation("EmployeeMedia")
+
+  // SEO audit relationships
+  seoCreated seo_setting[] @relation("SeoCreatedBy")
+  seoUpdated seo_setting[] @relation("SeoUpdatedBy")
+}
+
+enum role {
+  ADMIN
+  EMPLOYEE
+}
+
+model seo_setting {
+  id                 String  @id @default(uuid())
+  settingKey         String  @unique @default("GLOBAL") @db.VarChar(20)
+  metaTitle          String? @db.VarChar(255)
+  metaDescription    String? @db.Text
+  focusKeywords      String? @db.Text
+  canonicalUrl       String? @db.VarChar(2048)
+  robotsIndex        Boolean @default(true)
+  robotsFollow       Boolean @default(true)
+  ogTitle            String? @db.VarChar(255)
+  ogDescription      String? @db.Text
+  ogImage            String? @db.VarChar(2048)
+  twitterTitle       String? @db.VarChar(255)
+  twitterDescription String? @db.Text
+  twitterImage       String? @db.VarChar(2048)
+
+  createdAt DateTime @default(now()) @db.DateTime(0)
+  updatedAt DateTime @updatedAt @db.DateTime(0)
+
+  createdById String
+  updatedById String?
+
+  createdBy employee  @relation("SeoCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+  updatedBy employee? @relation("SeoUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+}
+
+model seo_schemas {
+  id         String     @id @default(uuid())
+  schemaType SchemaType @unique
+  schemaData Json
+  isActive   Boolean    @default(true)
+  createdAt  DateTime   @default(now()) @db.DateTime(0)
+  updatedAt  DateTime   @updatedAt @db.DateTime(0)
+}
+
+enum SchemaType {
+  ORGANIZATION
+  FAQ
+  BREADCRUMB
+  WEBSITE
+  LOCAL_BUSINESS
+}
+
+model homepage_sections {
+  id          String      @id @default(uuid())
+  sectionType SectionType @unique
+  title       String      @db.VarChar(255)
+  subtitle    String?     @db.Text
+  description String?     @db.Text
+  image       String?     @db.VarChar(500)
+  buttonText  String?     @db.VarChar(100)
+  buttonUrl   String?     @db.VarChar(500)
+  isActive    Boolean     @default(true)
+  updatedAt   DateTime    @updatedAt @db.DateTime(0)
+}
+
+enum SectionType {
+  HERO
+  ABOUT
+}
+
+model vehicle {
+  id              String   @id @default(uuid())
+  name            String   @db.VarChar(255)
+  slug            String   @unique @db.VarChar(255)
+  image           String?  @db.VarChar(500)
+  seatingCapacity Int
+  description     String?  @db.Text
+  features        Json?
+  sortOrder       Int      @default(0)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now()) @db.DateTime(0)
+  updatedAt       DateTime @updatedAt @db.DateTime(0)
+}
+
+model occasion {
+  id          String   @id @default(uuid())
+  title       String   @db.VarChar(255)
+  slug        String   @unique @db.VarChar(255)
+  description String?  @db.Text
+  image       String?  @db.VarChar(500)
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now()) @db.DateTime(0)
+  updatedAt   DateTime @updatedAt @db.DateTime(0)
+}
+
+model testimonial {
+  id            String   @id @default(uuid())
+  customerName  String   @db.VarChar(255)
+  review        String   @db.Text
+  rating        Int
+  customerImage String?  @db.VarChar(500)
+  sortOrder     Int      @default(0)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now()) @db.DateTime(0)
+  updatedAt     DateTime @updatedAt @db.DateTime(0)
+}
+
+model gallery {
+  id        String   @id @default(uuid())
+  image     String   @db.VarChar(500)
+  altText   String?  @db.VarChar(255)
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now()) @db.DateTime(0)
+  updatedAt DateTime @updatedAt @db.DateTime(0)
+}
+
+model contact_information {
+  id             String   @id @default(uuid())
+  settingKey     String   @unique @default("GLOBAL") @db.VarChar(20)
+  phone          String?  @db.VarChar(20)
+  email          String?  @db.VarChar(255)
+  address        String?  @db.Text
+  googleMapEmbed String?  @db.Text
+  updatedAt      DateTime @updatedAt @db.DateTime(0)
+}
+
+model media {
+  id           String   @id @default(uuid())
+  fileName     String   @db.VarChar(255)
+  originalName String   @db.VarChar(255)
+  filePath     String   @db.VarChar(500)
+  mimeType     String   @db.VarChar(100)
+  fileSize     Int
+  uploadedBy   String
+  createdAt    DateTime @default(now()) @db.DateTime(0)
+
+  employee employee @relation("EmployeeMedia", fields: [uploadedBy], references: [id], onDelete: Restrict)
+
+  @@index([uploadedBy])
+}

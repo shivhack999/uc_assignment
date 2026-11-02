@@ -8,14 +8,15 @@ datasource db {
 }
 
 model employee {
-  id        String   @id @default(uuid())
-  name      String   @db.VarChar(100)
-  email     String   @unique @db.VarChar(255)
-  password  String   @db.VarChar(255)
-  role      role     @default(EMPLOYEE)
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now()) @db.DateTime(0)
-  updatedAt DateTime @updatedAt @db.DateTime(0)
+  id            String   @id @default(uuid())
+  name          String   @db.VarChar(100)
+  email         String   @unique @db.VarChar(255)
+  password      String   @db.VarChar(255)
+  role          role     @default(EMPLOYEE)
+  isActive      Boolean  @default(true)
+  refresh_token String?  @db.Text
+  createdAt     DateTime @default(now()) @db.DateTime(0)
+  updatedAt     DateTime @updatedAt @db.DateTime(0)
 
   // One employee can upload multiple media files
   mediaUploads media[] @relation("EmployeeMedia")

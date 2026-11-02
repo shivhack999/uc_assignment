@@ -1,6 +1,12 @@
 const router = require("express").Router();
 const authRouter = require("./auth/auth.router");
-
+const seo = require("./seo/seo.router");
+const schema = require("./schema/schema.router");
+const common = require("../routers/common/common.router");
+const homepage = require("./homepage/homepage.routes");
 router.use("/auth", authRouter);
-
+router.use("/web", seo);
+router.use("/web", schema);
+router.use("/common", common);
+router.use("/homepage", homepage);
 module.exports = router;

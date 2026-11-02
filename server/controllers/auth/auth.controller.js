@@ -3,33 +3,25 @@ const generate_access_token = require("../../helpers/token/accessToken");
 const generate_refresh_token = require("../../helpers/token/refreshToken");
 const asyncHandler = require("../../middlewares/error/asyncHandler");
 const AppError = require("../../utils/error/AppError");
+const bcrypt = require('bcrypt');
 const signin = asyncHandler(async (req, res, next) => {
-  const { emailOrContact, password } = req?.body || {};
+  const { email, password } = req?.body || {};
 
-  if (!emailOrContact || !password) {
+  if (!email || !password) {
     throw new AppError("Email and password are required", 400);
   }
 
-  const response = await prisma.user.findFirst({
+  const response = await prisma.employee.findFirst({
     where: {
-      OR: [{ email: emailOrContact }, { contact_number: emailOrContact }],
+      email: email,
     },
     select: {
       id: true,
       name: true,
       email: true,
       password: true,
-      contact_number: true,
-      is_active: true,
-      inverters: {
-        select: {
-          id: true,
-          imei: true,
-          model: true,
-          password: true,
-          lastSeenAt: true,
-        },
-      },
+      isActive: true,
+      role:true
     },
   });
   if (!response) {
@@ -54,7 +46,7 @@ const signin = asyncHandler(async (req, res, next) => {
     id: response.id,
   });
 
-  await prisma.user.update({
+  await prisma.employee.update({
     where: { id: response.id },
     data: { refresh_token: refreshToken },
   });
@@ -111,8 +103,6 @@ const logout = asyncHandler(async (req, res) => {
       message: "Logout successfully",
     });
 });
-
-
 
 module.exports = {
   signin,

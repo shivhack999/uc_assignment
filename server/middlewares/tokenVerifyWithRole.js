@@ -12,7 +12,8 @@ module.exports.tokenVerification = (allowedRoles, allowedDepartments) => {
       const splitToken = token?.split(" ");
       if (splitToken.length === 2) {
         try {
-          decoded = jwt.verify(splitToken[1], process.env.JWT_SECRET);
+          decoded = jwt.verify(splitToken[1], process.env.A_JWT_SECRET);
+
         } catch (err) {
           return res.status(403).json({
             success: false,
@@ -23,32 +24,27 @@ module.exports.tokenVerification = (allowedRoles, allowedDepartments) => {
         decoded.id = splitToken[1];
       }
       // 🔥 FAST indexed lookup
-      const user = await prisma.auth.findUnique({
+      const user = await prisma.employee.findUnique({
         where: { id: decoded.id },
         select: {
           id: true,
           name: true,
           email: true,
-          is_active: true,
+          isActive: true,
           refresh_token:true,
-          role: { select: { name: true } },
-          department: { select: { name: true } }
+          role: true
         }
       });
       if (!user) {
         return res.status(403).json({ success: false, message: "User not found" });
       }
       if(!user.refresh_token) return res.status(403).json({ success: false, message: "User already logout" });
-      if (!user.is_active) {
+      if (!user.isActive) {
         return res.status(403).json({ success: false, message: "User is inactive" });
       }
-      const userRole = user.role.name;
-      const userDepartment = user.department.name;
+      const userRole = user.role;
       if (!allowedRoles.includes(userRole)) {
         return res.status(403).json({ success: false, message: "Access denied" });
-      }
-      if(!allowedDepartments.includes(userDepartment)){
-        return res.status(403).json({ success:false, message: "Access denied please connect with IT team."})
       }
       req.user = user;
       next();

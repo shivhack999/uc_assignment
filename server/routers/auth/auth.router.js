@@ -9,7 +9,7 @@ const {
 } = authController;
 
 
-router.post("/signin", signin);
+router.post("/login", signin);
 router.post("/logout", logout);
 
 module.exports = router;

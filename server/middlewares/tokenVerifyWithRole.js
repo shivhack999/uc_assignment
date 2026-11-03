@@ -5,6 +5,7 @@ module.exports.tokenVerification = (allowedRoles, allowedDepartments) => {
   return async (req, res, next) => {
     try {
       const token = req?.cookies?.accessToken || req?.headers?.authorization;
+      console.log("Token:-", token)
       if (!token) {
         return res.status(403).json({ success: false, message: "No token provided" });
       }
@@ -12,7 +13,7 @@ module.exports.tokenVerification = (allowedRoles, allowedDepartments) => {
       const splitToken = token?.split(" ");
       if (splitToken.length === 2) {
         try {
-          decoded = jwt.verify(splitToken[1], process.env.A_JWT_SECRET);
+          decoded = jwt.verify(splitToken[1], process.env.R_JWT_SECRET);
 
         } catch (err) {
           return res.status(403).json({
@@ -23,6 +24,7 @@ module.exports.tokenVerification = (allowedRoles, allowedDepartments) => {
       }else{
         decoded.id = splitToken[1];
       }
+      console.log("decoded :", decoded);
       // 🔥 FAST indexed lookup
       const user = await prisma.employee.findUnique({
         where: { id: decoded.id },

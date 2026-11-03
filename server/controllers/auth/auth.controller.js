@@ -70,6 +70,7 @@ const signin = asyncHandler(async (req, res, next) => {
         id: response?.id,
         name: response?.name,
         email: response?.email,
+        role: response?.role,
         contact: response?.contact_number,
         inverter: response?.inverters,
       },

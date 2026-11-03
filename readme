@@ -1,0 +1,299 @@
+
+# Admin Dashboard – Assignment Project
+
+## About the Project
+
+This project is a web-based admin dashboard developed as part of an assignment. The main purpose of this application is to provide an easy way to manage website content and other administrative operations from a single dashboard.
+
+The application has been developed using React.js for the frontend and Node.js with Express.js for the backend. MySQL is used as the database, and Prisma ORM is used to manage database operations.
+
+The admin can log in securely and manage different sections of the website without directly modifying the code.
+
+## Technologies Used
+
+### Frontend
+- React.js
+- Vite
+- JavaScript
+- Axios
+- React Router DOM
+- CSS
+
+### Backend
+- Node.js
+- Express.js
+- Prisma ORM
+- MySQL
+- JSON Web Token (JWT)
+- Bcrypt
+- Cookie Parser
+- CORS
+
+## Project Structure
+
+The project is divided into two main folders:
+
+```text
+assignment/
+│
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── context/
+│   │   ├── pages/
+│   │   ├── services/
+│   │   ├── assets/
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── .env
+│   └── package.json
+│
+├── backend/
+│   ├── config/
+│   ├── controllers/
+│   ├── middlewares/
+│   ├── routes/
+│   ├── services/
+│   ├── helpers/
+│   ├── prisma/
+│   ├── utils/
+│   ├── .env
+│   └── package.json
+│
+└── README.md
+```
+
+## Requirements
+
+Before running the project, make sure the following software is installed:
+
+- Node.js (LTS version recommended)
+- npm
+- MySQL Server workbench
+
+## Installation and Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/shivhack999/uc_assignment.git
+```
+
+Move into the project directory:
+
+```bash
+cd assignment
+```
+
+### 2. Backend Setup
+
+Open the backend directory:
+
+```bash
+cd server
+```
+
+Install the required packages:
+
+```bash
+npm install
+```
+
+### 3. Configure Backend Environment Variables
+
+Create a `.env` file inside the backend folder.
+
+Add the following environment variables:
+
+```env
+DATABASE_URL="mysql://root:root@localhost:3306/uc"
+PORT=5000
+A_JWT_SECRET="jnvlkoi ooj osfosjoisj oigo igofj gdf vkjdsfvksdf vkdfnkvnsdf vndsfivd fvnadfu"
+R_JWT_SECRET="jnvkjdsfvksdf vkdfnkvnsdf vndsfivd fvnadfu"
+
+NODE_ENV="development"
+```
+
+Replace the database username and password with your local MySQL credentials.
+
+Also, use strong and unique values for both JWT secrets.
+
+### 4. Database Setup
+
+First, create a database in MySQL:
+
+```sql
+CREATE DATABASE uc;
+```
+
+Generate the Prisma client:
+
+```bash
+npx prisma generate
+```
+
+Run database migrations:
+
+```bash
+npx prisma migrate dev
+```
+
+If your project uses `prisma db push` instead of migrations, use the command configured for your project.
+
+### 5. Start the Backend Server
+
+Run the following command:
+
+```bash
+npm run dev
+```
+
+The backend server should start at:
+
+```text
+http://localhost:5000
+```
+
+### 6. Frontend Setup
+
+Open another terminal and navigate to the client folder:
+
+```bash
+cd client
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+### 7. Configure Frontend Environment Variables
+
+Create a `.env` file inside the frontend folder.
+
+Add:
+
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
+Change the URL according to your backend API configuration.
+
+### 8. Start the Frontend
+
+Run:
+
+```bash
+npm run dev
+```
+
+The frontend application should be available at:
+
+```text
+http://localhost:5173
+```
+
+Open this URL in your browser to access the application.
+
+## Main Features
+
+### 1. Admin Authentication
+- Admin login functionality.
+- Password verification using bcrypt.
+- JWT-based authentication.
+- Access token and refresh token stored in HTTP-only cookies.
+- Protected routes for admin access.
+- Logout functionality.
+
+### 2. Dashboard
+- Centralized admin dashboard.
+- Easy navigation between different management sections.
+
+### 3. Homepage Management
+- Manage homepage sections.
+- Update hero section content.
+- Manage homepage about section content.
+- Update website content through the admin panel.
+
+### 4. About Section Management
+- Dedicated admin interface for managing the About section.
+- Manage and update About section content.
+
+### 5. SEO Management
+- Manage homepage SEO information.
+- Update SEO title and meta description.
+- Manage other SEO-related fields supported by the application.
+
+## Authentication Flow
+
+The application uses JWT authentication with HTTP-only cookies.
+
+Two tokens are used:
+
+- Access Token: Used to authenticate API requests.
+- Refresh Token: Used to generate a new access token when the existing access token expires.
+
+The refresh token is also stored in the database to validate the user's session.
+
+This approach helps maintain the admin session after refreshing the browser, provided the refresh token remains valid.
+
+## API Integration
+
+Axios is used to communicate between the frontend and backend.
+
+The API base URL is configured through the frontend environment variable.
+
+The Axios instance uses:
+
+```javascript
+withCredentials: true
+```
+
+This allows the browser to send HTTP-only authentication cookies with API requests.
+
+## Important Notes
+
+- Make sure MySQL is running before starting the backend.
+- Make sure the backend server is running before accessing frontend API features.
+- Never commit `.env` files to GitHub.
+- Keep JWT secrets private.
+- Configure CORS properly when running frontend and backend on different origins.
+- For production deployment, configure HTTPS and secure cookie settings.
+- Use the same cookie settings when setting and clearing authentication cookies.
+
+## Running the Complete Project
+
+You need two terminals to run the complete application.
+
+**Terminal 1 – Backend**
+
+```bash
+cd server
+npm run dev
+```
+
+**Terminal 2 – Frontend**
+
+```bash
+cd client
+npm run dev
+```
+
+Once both servers are running, open:
+
+```text
+http://localhost:5173
+```
+
+## Author
+
+Developed as part of an assignment using React.js, Node.js, Express.js, Prisma ORM, and MySQL.
+
+if there any query please call or mail me.
+Contact no. +91 7905573608
+Email id. shivhack999@gmail.com
+
+Thank you.
+

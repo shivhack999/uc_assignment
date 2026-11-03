@@ -271,7 +271,7 @@ You need two terminals to run the complete application.
 
 ```bash
 cd server
-npm run dev
+nodemon or npm run dev
 ```
 
 **Terminal 2 – Frontend**

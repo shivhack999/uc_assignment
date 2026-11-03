@@ -9,13 +9,12 @@ module.exports = function configureExpress(app) {
   // CORS setup
   app.use(
     cors({
-      origin: [
-        "http://localhost:5173"
-      ],
+      origin: ["http://localhost:5173"],
       credentials: true,
-    })
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+    }),
   );
-
 
   // Body parsing
   app.use(express.json({ limit: "5mb" }));
@@ -28,7 +27,6 @@ module.exports = function configureExpress(app) {
 
   // Static files
   app.use("/api/uploads", express.static(path.join(__dirname, "../uploads")));
-
 
   // Logger
   app.use((req, res, next) => {

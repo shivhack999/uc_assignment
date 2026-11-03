@@ -13,7 +13,7 @@ module.exports.tokenVerification = (allowedRoles, allowedDepartments) => {
       const splitToken = token?.split(" ");
       if (splitToken.length === 2) {
         try {
-          decoded = jwt.verify(splitToken[1], process.env.R_JWT_SECRET);
+          decoded = jwt.verify(splitToken[1], process.env.A_JWT_SECRET);
 
         } catch (err) {
           return res.status(403).json({

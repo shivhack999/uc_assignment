@@ -11,6 +11,7 @@ import authService from "../services/auth.service";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
+    console.log("User from localStorage:", localStorage.getItem("user"));
     const [user, setUser] = useState(() => {
         try {
             return JSON.parse(localStorage.getItem("user")) || null;
@@ -21,27 +22,28 @@ export function AuthProvider({ children }) {
 
     const [loading, setLoading] = useState(true);
 
+    // Verify session whenever application loads
     useEffect(() => {
         const verifySession = async () => {
-            const token = localStorage.getItem("token");
-
-            if (!token) {
-                setLoading(false);
-                return;
-            }
-
             try {
-                const response = await authService.getProfile();
-                const profile = response.data?.user || response.data;
+                // Backend reads refresh token from HTTP-only cookie
+                const response = await authService.refresh();
+
+                const profile =
+                    response.data;
 
                 if (profile) {
                     setUser(profile);
-                    localStorage.setItem("user", JSON.stringify(profile));
+                    localStorage.setItem(
+                        "user",
+                        JSON.stringify(profile)
+                    );
                 }
-            } catch {
-                localStorage.removeItem("token");
-                localStorage.removeItem("user");
+            } catch (error) {
+                console.log("Session verification failed:", error);
+
                 setUser(null);
+                localStorage.removeItem("user");
             } finally {
                 setLoading(false);
             }
@@ -50,40 +52,39 @@ export function AuthProvider({ children }) {
         verifySession();
     }, []);
 
+    // Login
     const login = async (credentials) => {
         const response = await authService.login(credentials);
-        console.log("res :", response.data)
-        // Adapt these two fields if your login response uses another shape.
-        const token =
-            response.data?.accessToken ||
-            response.data?.token ||
-            response.accessToken ||
-            response.token;
 
         const loggedInUser =
-            response.data ||
-            response.user;
-
-        if (!token) {
-            throw new Error("Login response did not contain an access token");
-        }
+            response.data?.user ||
+            response.data?.admin ||
+            response.data;
 
         if (!loggedInUser) {
             throw new Error("Login response did not contain user details");
         }
 
-        localStorage.setItem("token", token);
-        localStorage.setItem("user", JSON.stringify(loggedInUser));
+        // No access token stored in localStorage.
+        // Backend sets HTTP-only cookies.
+
+        localStorage.setItem(
+            "user",
+            JSON.stringify(loggedInUser)
+        );
+
         setUser(loggedInUser);
 
         return loggedInUser;
     };
 
+    // Logout
     const logout = async () => {
         try {
             await authService.logout();
         } finally {
             setUser(null);
+            localStorage.removeItem("user");
         }
     };
 
@@ -92,7 +93,7 @@ export function AuthProvider({ children }) {
             value={{
                 user,
                 loading,
-                isAuthenticated: Boolean(user && localStorage.getItem("token")),
+                isAuthenticated: Boolean(user),
                 login,
                 logout,
             }}
@@ -106,7 +107,9 @@ export function useAuth() {
     const context = useContext(AuthContext);
 
     if (!context) {
-        throw new Error("useAuth must be used inside AuthProvider");
+        throw new Error(
+            "useAuth must be used inside AuthProvider"
+        );
     }
 
     return context;

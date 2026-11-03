@@ -26,7 +26,7 @@ function ProtectedRoute() {
 
     if (loading) return <Loader text="Verifying your session..." />;
     if (!isAuthenticated) return <Navigate to="/login" replace />;
-    if (user?.role !== "ADMIN") return <Navigate to="/login" replace />;
+    // if (user?.role !== "ADMIN") return <Navigate to="/login" replace />;
 
     return <Outlet />;
 }
@@ -35,6 +35,7 @@ function GuestRoute() {
     const { isAuthenticated, loading, user } = useAuth();
 
     if (loading) return <Loader />;
+    console.log("GuestRoute - isAuthenticated:", isAuthenticated, "user:", user);
     if (isAuthenticated && user?.role === "ADMIN") {
         return <Navigate to="/admin" replace />;
     }

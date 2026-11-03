@@ -5,6 +5,7 @@ import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 
 export default function AdminLayout() {
+    
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     return (

@@ -4,7 +4,7 @@ const homepageService = {
     // Hero and About
     getSections: () => api.get("/homepage/sections"),
     updateSections: (sections) =>
-        api.put("/homepage/sections", { sections }),
+        api.put("/homepage/sections",  sections ),
 
     // Vehicles
     getVehicles: (params = {}) =>

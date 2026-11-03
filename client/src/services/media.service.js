@@ -1,26 +1,20 @@
 
-import api from "./api";
+import apiService from "./api";
 
 const mediaService = {
-    getAll: (params = {}) =>
-        api.get("/media", { params }),
+  // Upload single image/file
+  uploadFile: (file, options = {}) => {
+    const formData = new FormData();
+    formData.append("file", file);
 
-    getById: (id) =>
-        api.get(`/media/${id}`),
-
-    upload: (file) => {
-        const formData = new FormData();
-        formData.append("image", file);
-
-        return api.post("/media/upload", formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
-    },
-
-    delete: (id) =>
-        api.delete(`/media/${id}`),
+    return apiService.post("/common/upload-file", formData, {
+      ...options,
+      headers: {
+        ...options.headers,
+        "Content-Type": undefined,
+      },
+    });
+  },
 };
 
 export default mediaService;

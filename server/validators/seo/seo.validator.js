@@ -51,9 +51,8 @@ const validateSEO = [
     .withMessage("OG description cannot exceed 160 characters"),
 
   body("ogImage")
-    .optional({ values: "null" })
     .trim()
-    .isURL({ require_protocol: true })
+    .notEmpty()
     .withMessage("Please provide a valid OG image URL"),
 
   body("ogType")
@@ -80,9 +79,8 @@ const validateSEO = [
     .withMessage("Twitter description cannot exceed 200 characters"),
 
   body("twitterImage")
-    .optional({ values: "null" })
     .trim()
-    .isURL({ require_protocol: true })
+    .notEmpty()
     .withMessage("Please provide a valid Twitter image URL"),
 
   // Validation Error Handler

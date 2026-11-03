@@ -3,9 +3,8 @@ const prisma = require("../../config/prisma.client");
 const asyncHandler = require("../../middlewares/error/asyncHandler");
 const AppError = require("../../utils/error/AppError");
 
-// --------------------------------------------------
 // COMMON HELPERS
-// --------------------------------------------------
+
 
 const validateId = (id) => {
     if (!id || typeof id !== "string" || !id.trim()) {
@@ -97,11 +96,9 @@ const reorderRecords = async (model, items) => {
     });
 };
 
-// ==================================================
-// A. HERO AND ABOUT US
-// ==================================================
 
-exports.getHomepageSections = asyncHandler(async (req, res) => {
+// HERO AND ABOUT US
+const getHomepageSections = asyncHandler(async (req, res) => {
     const sections = await prisma.homepage_sections.findMany({
         orderBy: {
             sectionType: "asc",
@@ -115,7 +112,8 @@ exports.getHomepageSections = asyncHandler(async (req, res) => {
     });
 });
 
-exports.updateHomepageSections = asyncHandler(async (req, res) => {
+const updateHomepageSections = asyncHandler(async (req, res) => {
+    console.log("Body :-", req.body);
     const { sections } = req.body;
 
     if (!Array.isArray(sections) || sections.length === 0) {
@@ -180,11 +178,8 @@ exports.updateHomepageSections = asyncHandler(async (req, res) => {
     });
 });
 
-// ==================================================
-// B. VEHICLES
-// ==================================================
-
-exports.createVehicle = asyncHandler(async (req, res) => {
+// VEHICLES
+const createVehicle = asyncHandler(async (req, res) => {
     const {
         name,
         slug,
@@ -224,7 +219,7 @@ exports.createVehicle = asyncHandler(async (req, res) => {
     });
 });
 
-exports.getVehicles = asyncHandler(async (req, res) => {
+const getVehicles = asyncHandler(async (req, res) => {
     const { isActive } = req.query;
 
     const where = {};
@@ -252,7 +247,7 @@ exports.getVehicles = asyncHandler(async (req, res) => {
     });
 });
 
-exports.getVehicleById = asyncHandler(async (req, res) => {
+const getVehicleById = asyncHandler(async (req, res) => {
     const { id } = req.params;
     validateId(id);
 
@@ -271,7 +266,7 @@ exports.getVehicleById = asyncHandler(async (req, res) => {
     });
 });
 
-exports.updateVehicle = asyncHandler(async (req, res) => {
+const updateVehicle = asyncHandler(async (req, res) => {
     const { id } = req.params;
     validateId(id);
 
@@ -351,7 +346,7 @@ exports.updateVehicle = asyncHandler(async (req, res) => {
     });
 });
 
-exports.deleteVehicle = asyncHandler(async (req, res) => {
+const deleteVehicle = asyncHandler(async (req, res) => {
     const { id } = req.params;
     validateId(id);
 
@@ -373,7 +368,7 @@ exports.deleteVehicle = asyncHandler(async (req, res) => {
     });
 });
 
-exports.reorderVehicles = asyncHandler(async (req, res) => {
+const reorderVehicles = asyncHandler(async (req, res) => {
     const { items } = req.body;
 
     await reorderRecords("vehicle", items);
@@ -384,11 +379,8 @@ exports.reorderVehicles = asyncHandler(async (req, res) => {
     });
 });
 
-// ==================================================
-// C. OCCASIONS
-// ==================================================
-
-exports.createOccasion = asyncHandler(async (req, res) => {
+// OCCASIONS
+const createOccasion = asyncHandler(async (req, res) => {
     const {
         title,
         slug,
@@ -423,7 +415,7 @@ exports.createOccasion = asyncHandler(async (req, res) => {
     });
 });
 
-exports.getOccasions = asyncHandler(async (req, res) => {
+const getOccasions = asyncHandler(async (req, res) => {
     const { isActive } = req.query;
     const where = {};
 
@@ -450,7 +442,7 @@ exports.getOccasions = asyncHandler(async (req, res) => {
     });
 });
 
-exports.getOccasionById = asyncHandler(async (req, res) => {
+const getOccasionById = asyncHandler(async (req, res) => {
     const { id } = req.params;
     validateId(id);
 
@@ -469,7 +461,7 @@ exports.getOccasionById = asyncHandler(async (req, res) => {
     });
 });
 
-exports.updateOccasion = asyncHandler(async (req, res) => {
+const updateOccasion = asyncHandler(async (req, res) => {
     const { id } = req.params;
     validateId(id);
 
@@ -538,7 +530,7 @@ exports.updateOccasion = asyncHandler(async (req, res) => {
     });
 });
 
-exports.deleteOccasion = asyncHandler(async (req, res) => {
+const deleteOccasion = asyncHandler(async (req, res) => {
     const { id } = req.params;
     validateId(id);
 
@@ -560,7 +552,7 @@ exports.deleteOccasion = asyncHandler(async (req, res) => {
     });
 });
 
-exports.reorderOccasions = asyncHandler(async (req, res) => {
+const reorderOccasions = asyncHandler(async (req, res) => {
     const { items } = req.body;
 
     await reorderRecords("occasion", items);
@@ -571,11 +563,9 @@ exports.reorderOccasions = asyncHandler(async (req, res) => {
     });
 });
 
-// ==================================================
-// D. TESTIMONIALS
-// ==================================================
 
-exports.createTestimonial = asyncHandler(async (req, res) => {
+// TESTIMONIALS
+const createTestimonial = asyncHandler(async (req, res) => {
     const {
         customerName,
         review,
@@ -614,7 +604,7 @@ exports.createTestimonial = asyncHandler(async (req, res) => {
     });
 });
 
-exports.getTestimonials = asyncHandler(async (req, res) => {
+const getTestimonials = asyncHandler(async (req, res) => {
     const { isActive } = req.query;
     const where = {};
 
@@ -641,7 +631,7 @@ exports.getTestimonials = asyncHandler(async (req, res) => {
     });
 });
 
-exports.getTestimonialById = asyncHandler(async (req, res) => {
+const getTestimonialById = asyncHandler(async (req, res) => {
     const { id } = req.params;
     validateId(id);
 
@@ -660,7 +650,7 @@ exports.getTestimonialById = asyncHandler(async (req, res) => {
     });
 });
 
-exports.updateTestimonial = asyncHandler(async (req, res) => {
+const updateTestimonial = asyncHandler(async (req, res) => {
     const { id } = req.params;
     validateId(id);
 
@@ -734,7 +724,7 @@ exports.updateTestimonial = asyncHandler(async (req, res) => {
     });
 });
 
-exports.deleteTestimonial = asyncHandler(async (req, res) => {
+const deleteTestimonial = asyncHandler(async (req, res) => {
     const { id } = req.params;
     validateId(id);
 
@@ -756,13 +746,7 @@ exports.deleteTestimonial = asyncHandler(async (req, res) => {
     });
 });
 
-// ==================================================
-// E. GALLERY
-// Uses the fileUrl returned by your common upload API.
-// No Multer and no physical file upload in this controller.
-// ==================================================
-
-exports.createGalleryImage = asyncHandler(async (req, res) => {
+const createGalleryImage = asyncHandler(async (req, res) => {
     const {
         image,
         altText,
@@ -791,7 +775,7 @@ exports.createGalleryImage = asyncHandler(async (req, res) => {
     });
 });
 
-exports.getGallery = asyncHandler(async (req, res) => {
+const getGallery = asyncHandler(async (req, res) => {
     const { isActive } = req.query;
     const where = {};
 
@@ -818,7 +802,7 @@ exports.getGallery = asyncHandler(async (req, res) => {
     });
 });
 
-exports.updateGalleryAltText = asyncHandler(async (req, res) => {
+const updateGalleryAltText = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const { altText } = req.body;
 
@@ -851,7 +835,7 @@ exports.updateGalleryAltText = asyncHandler(async (req, res) => {
     });
 });
 
-exports.deleteGalleryImage = asyncHandler(async (req, res) => {
+const deleteGalleryImage = asyncHandler(async (req, res) => {
     const { id } = req.params;
     validateId(id);
 
@@ -875,7 +859,7 @@ exports.deleteGalleryImage = asyncHandler(async (req, res) => {
     });
 });
 
-exports.reorderGallery = asyncHandler(async (req, res) => {
+const reorderGallery = asyncHandler(async (req, res) => {
     const { items } = req.body;
 
     await reorderRecords("gallery", items);
@@ -886,11 +870,8 @@ exports.reorderGallery = asyncHandler(async (req, res) => {
     });
 });
 
-// ==================================================
-// F. CONTACT INFORMATION
-// ==================================================
-
-exports.getContactInformation = asyncHandler(async (req, res) => {
+// CONTACT INFORMATION
+const getContactInformation = asyncHandler(async (req, res) => {
     const contact = await prisma.contact_information.findUnique({
         where: {
             settingKey: "GLOBAL",
@@ -904,7 +885,7 @@ exports.getContactInformation = asyncHandler(async (req, res) => {
     });
 });
 
-exports.updateContactInformation = asyncHandler(async (req, res) => {
+const updateContactInformation = asyncHandler(async (req, res) => {
     const {
         phone,
         email,
@@ -955,3 +936,34 @@ exports.updateContactInformation = asyncHandler(async (req, res) => {
         message: "Contact information updated successfully",
     });
 });
+
+
+module.exports = {
+    updateContactInformation,
+    getContactInformation,
+    reorderGallery,
+    deleteGalleryImage,
+    updateGalleryAltText,
+    getGallery,
+    createGalleryImage,
+    deleteTestimonial,
+    updateTestimonial,
+    getTestimonialById,
+    getTestimonials,
+    createTestimonial,
+    reorderOccasions,
+    deleteOccasion,
+    updateOccasion, 
+    getOccasionById,
+    getOccasions,
+    createOccasion,
+    reorderVehicles,
+    deleteVehicle,
+    updateVehicle,
+    getVehicleById,
+    getVehicles,
+    createVehicle,
+    updateHomepageSections,
+    getHomepageSections,
+
+}

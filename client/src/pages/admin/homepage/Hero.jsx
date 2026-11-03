@@ -51,7 +51,7 @@ export default function Hero() {
           isActive: existingHero.isActive ?? true,
         });
 
-        setPreview(existingHero.image || "");
+        setPreview(`${api.defaults.baseURL.replace(/\/api\/?$/, "")}/api/uploads${existingHero.image}`);
       }
     } catch (err) {
       console.error("Error fetching hero section:", err);

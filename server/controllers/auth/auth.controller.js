@@ -127,7 +127,6 @@ const profile = asyncHandler(async (req, res) => {
 
 const refresh = asyncHandler(async (req, res) => {
   const refreshToken = req.cookies?.refreshToken;
-  console.log("Refresh Token from cookie:", refreshToken);
   if (!refreshToken) {
     throw new AppError("Refresh token not found", 401);
   }

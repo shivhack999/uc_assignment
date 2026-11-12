@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import homepageService from "../../services/homepage.service";
 import api from "../../services/api";
+import SEO from "../../components/common/SEO";
+import useHomepageSEO from "../../hooks/useHomepageSEO";
 export default function Home() {
+  const { seo, seoLoading } = useHomepageSEO();
   const [sections, setSections] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [gallery, setGallery] = useState([]);
@@ -48,6 +51,8 @@ export default function Home() {
     return embed.startsWith("https://www.google.com/maps/embed") ? embed : "";
   };
   return (
+    <>
+      {!seoLoading && seo && <SEO seo={seo} />}
     <main>
       {hero?.isActive && (
         <section className="relative flex min-h-[520px] items-center bg-gray-900">
@@ -223,5 +228,6 @@ export default function Home() {
         </div>
       </section>
     </main>
+    </>
   );
 }
